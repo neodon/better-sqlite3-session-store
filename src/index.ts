@@ -1,5 +1,5 @@
 // @format
-const add = require("date-fns/add");
+import add from "date-fns/add";
 
 // NOTE: 1d = 86400s
 const oneDay = 86400;
@@ -18,7 +18,7 @@ const schema = `
 
 module.exports = ({ Store }) => {
   class SqliteStore extends Store {
-    constructor(options = {}) {
+    constructor(options: any = {}) {
       super(options);
 
       if (!options.client) {
@@ -182,7 +182,7 @@ module.exports = ({ Store }) => {
     }
 
     touch(sid, sess, cb) {
-      const entry = { sid };
+      const entry: any = { sid };
       if (sess && sess.cookie && sess.cookie.expires) {
         entry.expire = new Date(sess.cookie.expires).toISOString();
       } else {
