@@ -6,7 +6,7 @@ const { unlinkSync, existsSync } = require("fs");
 const differenceInSeconds = require("date-fns/differenceInSeconds");
 const add = require("date-fns/add");
 
-const SqliteStore = require("../src/index.js")(session);
+const SqliteStore = require("../dist/index.js")(session);
 
 const dbName = "test.db";
 const dbOptions = {

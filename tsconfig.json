@@ -2,6 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "module": "CommonJS",
+    "outDir": "dist",
     "target": "ES6"
   },
   "include": [

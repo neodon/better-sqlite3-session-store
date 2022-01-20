@@ -4,7 +4,8 @@
   "description": "A session store for express-session.",
   "main": "src/index.js",
   "scripts": {
-    "test": "ava --verbose --serial"
+    "build": "tsc",
+    "test": "npm run build && ava --verbose --serial"
   },
   "repository": {
     "type": "git",
