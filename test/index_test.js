@@ -6,7 +6,14 @@ const { unlinkSync, existsSync } = require("fs");
 const differenceInSeconds = require("date-fns/differenceInSeconds");
 const add = require("date-fns/add");
 
-const SqliteStore = require("../dist/index.js")(session);
+const throwError = error => { throw new Error(error) }
+
+const testMode = process.env.TEST_MODE ?? 'es5'
+
+const SqliteStore
+  = testMode === 'es5' ? require("../dist/index.js")(session)
+  : testMode === 'es6' ? require("../dist/index.js").SqliteStore
+  : throwError("TEST_MODE must be set to 'es5' (default) or 'es6'");
 
 const dbName = "test.db";
 const dbOptions = {

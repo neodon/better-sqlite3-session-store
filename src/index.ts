@@ -31,13 +31,13 @@ function applyMixins(derivedCtor: any, baseCtors: any[]) {
   });
 }
 
-module.exports = ({ Store }: { Store: Constructor<session.Store>}): Constructor<SqliteStore> => {
+const CreateSqliteStore = ({ Store }: { Store: Constructor<session.Store>}): Constructor<SqliteStore> => {
   const $class = class extends SqliteStore {}
   applyMixins($class, [Store])
   return $class
 }
 
-export default class SqliteStore extends session.Store {
+class SqliteStore extends session.Store {
   expired: {
     clear: boolean
     intervalMs: number
@@ -253,3 +253,6 @@ export default class SqliteStore extends session.Store {
     cb(null, res);
   }
 }
+
+CreateSqliteStore.SqliteStore = SqliteStore
+export = CreateSqliteStore
