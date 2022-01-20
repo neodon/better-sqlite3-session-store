@@ -1,12 +1,10 @@
 // @format
 const test = require("ava").serial;
 const sqlite = require("better-sqlite3");
-const session = require("express-session");
 const { unlinkSync, existsSync } = require("fs");
 const differenceInSeconds = require("date-fns/differenceInSeconds");
 const add = require("date-fns/add");
-
-const SqliteStore = require("../dist/index.js")(session);
+const SqliteStore = require("../dist/index.js").default
 
 const dbName = "test.db";
 const dbOptions = {
