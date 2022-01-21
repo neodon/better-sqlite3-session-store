@@ -18,6 +18,15 @@ const schema = `
   )
 `;
 
+export interface SqliteStoreOptions extends session.SessionOptions {
+  client: BetterSqlite3.Database
+
+  expired: {
+    clear: boolean
+    intervalMs: number
+  }
+}
+
 export default class SqliteStore extends session.Store {
   expired: {
     clear: boolean
@@ -26,8 +35,8 @@ export default class SqliteStore extends session.Store {
 
   client: BetterSqlite3.Database
 
-  constructor(options: any = {}) {
-    super(options);
+  constructor(options: Partial<SqliteStoreOptions> = {}) {
+    super(options as any);
 
     if (!options.client) {
       throw new Error("A client must be directly provided to SqliteStore");
@@ -74,7 +83,7 @@ export default class SqliteStore extends session.Store {
     this.client.exec(schema);
   }
 
-  set(sid, sess, cb) {
+  set(sid: string, sess: session.Session, cb: (err: unknown, res?: BetterSqlite3.RunResult) => void) {
     let age;
     if (sess.cookie && sess.cookie.maxAge) {
       // NOTE: `Max-age` property in cookie is in unit seconds
@@ -113,7 +122,7 @@ export default class SqliteStore extends session.Store {
     cb(null, res);
   }
 
-  get(sid, cb) {
+  get(sid: string, cb: (err: unknown, sess?: session.SessionData | null) => void) {
     let res;
 
     try {
@@ -138,7 +147,7 @@ export default class SqliteStore extends session.Store {
     }
   }
 
-  destroy(sid, cb) {
+  destroy(sid: string, cb: (err: unknown, res?: BetterSqlite3.RunResult) => void) {
     let res;
 
     try {
@@ -157,7 +166,7 @@ export default class SqliteStore extends session.Store {
     cb(null, res);
   }
 
-  length(cb) {
+  length(cb: (err: unknown, count: number) => void) {
     let res;
 
     try {
@@ -169,14 +178,14 @@ export default class SqliteStore extends session.Store {
         )
         .get();
     } catch (err) {
-      cb(err);
+      cb(err, -1);
       return;
     }
 
     cb(null, res.count);
   }
 
-  clear(cb) {
+  clear(cb: (err: unknown, res?: BetterSqlite3.RunResult) => void) {
     let res;
 
     try {
@@ -189,7 +198,7 @@ export default class SqliteStore extends session.Store {
     cb(null, res);
   }
 
-  touch(sid, sess, cb) {
+  touch(sid: string, sess: session.SessionData, cb: (err?: unknown, res?: BetterSqlite3.RunResult) => void) {
     const entry: any = { sid };
     if (sess && sess.cookie && sess.cookie.expires) {
       entry.expire = new Date(sess.cookie.expires).toISOString();
@@ -216,7 +225,7 @@ export default class SqliteStore extends session.Store {
     cb(null, res);
   }
   
-  all(cb) {
+  all(cb: (err: unknown, res?: any[]) => void) {
     let res;
     try {
       res = this.client
